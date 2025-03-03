@@ -5,6 +5,7 @@ export interface User {
   phonenumber: string;
   birthdate: string;
   email: string;
+  logged: boolean
 }
 
-export type DraftUser = Omit<User, "id" | "email">
+export type DraftUser = Omit<User, "id" | "email" | "logged">
