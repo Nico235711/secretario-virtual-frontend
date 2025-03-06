@@ -1,11 +1,11 @@
 export interface User {
   id: number;
-  username: string;
-  password: string;
-  phonenumber: string;
-  birthdate: string;
-  email: string;
-  logged: boolean
+  name: string;
+  lastname: string
+  email: string
+  password: string
+  phone: string
+  dateOfBirth: string
 }
 
-export type DraftUser = Omit<User, "id" | "email" | "logged">
+export type DraftUser = Omit<User, "id">

@@ -1,15 +1,21 @@
 import { Error } from "@/components/Error"
+import { registerUser } from "@/services/registerUser"
 import { DraftUser } from "@/types"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router"
 
 const INITIAL_STATE = {
-  username: "",
+  name: "",
   lastname: "",
+  email: "",
   password: "",
-  phonenumber: "",
-  birthdate: "",
+  phone: "",
+  dateOfBirth: "",
 }
+
+const routes = Object.freeze({
+  registerUser: "codigo-registro"
+})
 
 export const RegisterUser = () => {
 
@@ -17,12 +23,14 @@ export const RegisterUser = () => {
     register,
     formState: { errors },
     handleSubmit
-  } = useForm({ defaultValues: INITIAL_STATE })
+  } = useForm<DraftUser>({ defaultValues: INITIAL_STATE })
 
   const navigate = useNavigate()
 
-  const onSubmit = (data: DraftUser) => {
+  const onSubmit = async (data: DraftUser) => {
     if (!data) return
+    
+    await registerUser(routes.registerUser, data)
     navigate("/")
   }
 
@@ -33,14 +41,14 @@ export const RegisterUser = () => {
       onClick={handleSubmit(onSubmit)}
     >
       <div>
-        <label htmlFor="username">Nombre</label>
+        <label htmlFor="name">Nombre</label>
         <input
           type="text"
-          id="username"
+          id="name"
           className="bg-slate-200 rounded-sm p-1 w-full" 
-          {...register("username", { required: "El nombre es requerido" })}
+          {...register("name", { required: "El nombre es requerido" })}
         />
-        {errors.username && <Error>{errors.username.message}</Error>}
+        {errors.name && <Error>{errors.name.message}</Error>}
       </div>
       <div>
         <label htmlFor="lastname">Apellido</label>
@@ -49,6 +57,22 @@ export const RegisterUser = () => {
           id="lastname"
           className="bg-slate-200 rounded-sm p-1 w-full" 
           {...register("lastname", { required: "El apellido es requerido" })}
+        />
+        {errors.lastname && <Error>{errors.lastname.message}</Error>}
+      </div>
+      <div>
+        <label htmlFor="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          className="bg-slate-200 rounded-sm p-1 w-full" 
+          {...register("email", { 
+            required: "El email es requerido",
+            pattern: {
+              value: /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i,
+              message: "Formato de mail inválido"
+            }
+          })}
         />
         {errors.lastname && <Error>{errors.lastname.message}</Error>}
       </div>
@@ -76,12 +100,12 @@ export const RegisterUser = () => {
         />
       </div>
       <div>
-        <label htmlFor="phonenumber">Telefono de contacto</label>
+        <label htmlFor="phone">Telefono de contacto</label>
         <input
           type="number"
-          id="phonenumber"
+          id="phone"
           className="bg-slate-200 rounded-sm p-1 w-full" 
-          {...register("phonenumber", { 
+          {...register("phone", { 
             required: "El telefono de contacto es requerido",
             minLength: { 
               value: 8, 
@@ -89,18 +113,18 @@ export const RegisterUser = () => {
             }
           })}
         />
-        {errors.phonenumber && <Error>{errors.phonenumber.message}</Error>}
+        {errors.phone && <Error>{errors.phone.message}</Error>}
       </div>
       <div>
-        <label htmlFor="birthdate">Fecha de nacimiento</label>
+        <label htmlFor="dateOfBirth">Fecha de nacimiento</label>
         <input
           type="date"
-          id="birthdate"
+          id="dateOfBirth"
           className="bg-slate-200 rounded-sm p-1 w-full" 
-          {...register("birthdate", { 
+          {...register("dateOfBirth", { 
             required: "La fecha de nacimiento es requerida" })}
         />
-        {errors.birthdate && <Error>{errors.birthdate.message}</Error>}
+        {errors.dateOfBirth && <Error>{errors.dateOfBirth.message}</Error>}
       </div>
       <input
         type="submit"
